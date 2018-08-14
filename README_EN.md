@@ -8,7 +8,7 @@ Save Xlsx with sheetjs (include style)
 # Develop Reason
 * The latest version of [SheetJS/js-Xlsx(GitHub)](https://github.com/SheetJS/js-xlsx) / [Official Website](https://sheetjs.com/) didn't provide the function of reading or saving the XLSX with style
 * Although they provide a [Professional Edition](https://sheetjs.com/pro) , I can't get it.
-* Requirement:Saveing file with style , but don't need to read style
+* User Requirement(You can use this project while you need ...) : Saveing file with style , but don't need to read style
 
 # Solution
 * Use the latest version SheetJS/js-Xlsx(hereinafter called the 'new ver') to read the file
