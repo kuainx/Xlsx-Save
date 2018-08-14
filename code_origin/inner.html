@@ -3,24 +3,30 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title></title>
+        <!--old ver-->
         <script src="./xlsx.full.min.js"></script>
+        <!--FileSaver,可以使用原生进行替换-->
         <script src="./FileSaver.min.js"></script>
         <script type="text/javascript" charset="utf-8">
+//      保存文件
         const s2ab = s => {
                 let buf = new ArrayBuffer(s.length);
                 let view = new Uint8Array(buf);
                 for (let i = 0; i !== s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
                 return buf;
                 };
+//          监听数据
             window.addEventListener('message',function(e){
                 var jsonObj =  JSON.parse(e.data)
                 console.log(jsonObj);
+//              强行定义一个工作簿，并将工作表填入 
                 var workbook = {
                     SheetNames: ['Sheet1'],
                     Sheets: {
                       Sheet1: jsonObj
                     }
                   };
+//              写文件
                 var workbookOut = XLSX.write(workbook, {
                     bookType: 'xlsx',
                     bookSST: false,
