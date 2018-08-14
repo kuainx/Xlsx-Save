@@ -1,21 +1,24 @@
 # Xlsx-Style-Save
 Save Xlsx with sheetjs (include style)
 
-# English
-* Navigate to [README_EN.md](./README_EN.md)
+# 中文
+* 导航至 [README.md](./README.md)
+* This translation is incomplete. Please help me translate this article from [Chinese](./README.md).
 
-# 产生原因
-* 最新版本的 [SheetJS/js-Xlsx(Github)](https://github.com/SheetJS/js-xlsx) / [官网](https://sheetjs.com/) 的Xlsx.js没有提供保存/读取格式的功能
-* 他们提供了一个[Professional Edition](https://sheetjs.com/pro)，但是我并没有找到能够获取的方法
-* 需求：格式的保存，不要求读取
+# Develop Reason
+* The latest version of [SheetJS/js-Xlsx(GitHub)](https://github.com/SheetJS/js-xlsx) / [Official Website](https://sheetjs.com/) didn't provide the function of reading or saving the XLSX with style
+* Although they provide a [Professional Edition](https://sheetjs.com/pro) , I can't get it.
+* Requirement:Saveing file with style , but don't need to read style
 
-# 解决方案
-* 使用最新版本SheetJS/js-Xlsx（以下简称new ver）进行读取操作，以外部html（以下简称outer）包含
-* 使用过往版本?的js-Xlsx（以下简称old ver）进行保存操作，以内部html（以下简称inner）包含
-* inner使用iframe嵌入至outer
-* 使用js手动添加样式
+# Solution
+* Use the latest version SheetJS/js-Xlsx(hereinafter called the 'new ver') to read the file
+* Use the Outer HTML (hereinafter called the 'outer') to include it
+* Use the past version? js-Xlsx(hereinafter called the 'old ver') to save the file
+* Use the Inner HTML (hereinafter called the 'inner') to include it
+* Use Iframe to embed inner into outer
+* Use javascript to add style manually
  
-# 组成
+# Include
 * 在outer使用new ver 进行读取（使用h5的拖拽文件），转换成为JSON
 * 在outer进行数据（JSON格式）的处理
 * 在outer生成单元格合并数据
@@ -25,11 +28,15 @@ Save Xlsx with sheetjs (include style)
 * 在inner创建表（JSON），并使用JSON将原表信息覆盖
 * 在inner使用FileSaver（也可是原生js方法）将文件下载
  
-# 其他
-* 同域的父页面是可以直接调用iframe子页面的方法的
-* 为兼容跨域请求，使用postMessage
+# Other
+* In the same origin , outer can use the function in the inner
+* If you only use in the same origin , postMessage can be replaced
+* To use the cross origin at the same time , we use the postMessage of the H5 function
+* If you use the broser didn't allow HTML5 , it must be replaced
 
-# 更新日志
+# Update log
 ### `2018/08/14`
-* 更新readme.md
-* 
+* Update readme.md
+* Update readme_EN.md
+* Update code_origin
+* Update code_demo
