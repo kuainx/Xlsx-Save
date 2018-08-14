@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>JSexcel</title>
+<style>
+#drop{
+	border:2px dashed #bbb;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border-radius:5px;
+	padding:25px;
+	text-align:center;
+	font:20pt bold,"Vollkorn";color:#bbb
+}
+#data{
+    width:600px;
+    height:50px;
+}
+</style>
+</head>
+<body>
+    先后顺序，以*分隔
+    <textarea type="text" id="data"></textarea>
+    <button id="data_save" onclick="localStorage.setItem('data',$('#data').val());alert('Save Complete');">保存</button>
+<pre>
+<div id="drop">Drop a spreadsheet file here to see sheet data</div>
+</pre>
+<pre id="out"></pre>
+<iframe src="./inner.html" id="f" frameborder="0"></iframe>
+<script src="./xlsx.new.min.js"></script>
+<script src="./jquery.min.js"></script>
+<script>
+const s2ab = s => {
+let buf = new ArrayBuffer(s.length);
+let view = new Uint8Array(buf);
+for (let i = 0; i !== s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+return buf;
+};
+$("#data").val(localStorage.getItem('data'));
+var X = XLSX;
+var global_wb;
+var process_wb = (function() {
+	var OUT = document.getElementById('out');
+	var to_json = function to_json(workbook) {
+		var result = {};
+		workbook.SheetNames.forEach(function(sheetName) {
+			var roa = X.utils.sheet_to_json(workbook.Sheets[sheetName], {header:1});
+			if(roa.length) result[sheetName] = roa;
+		});
+		return result;
+	};
+	const borderAll = {  //单元格外侧框线
+      top: {
+        style: 'thin'
+      },
+      bottom: {
+        style: 'thin'
+      },
+      left: {
+        style: 'thin'
+      },
+      right: {
+        style: 'thin'
+      }
+    };
+	var outputXLSX = function outputXLSX(data,merge){
+	    var wb = XLSX.utils.book_new();
+        var ws = XLSX.utils.aoa_to_sheet(data);
+        
+        Object.keys(ws).forEach(function(index){
+            val=ws[index];
+            if(val.t==undefined){
+                
+            }else if(index.substr(0,1)=='B'){
+                ws[index].s={font: {name:'楷体', sz: 9},alignment: {vertical:"center",horizontal:"bottom"}, border: borderAll };
+            }else{
+                ws[index].s={font: {name:'楷体', sz: 9},alignment: {vertical:"center",horizontal:"center"}, border:borderAll };
+            }
+        });
+        
+        ws['!merges'] = merge;
+        console.log(ws);
+        document.getElementById('f').contentWindow.postMessage(JSON.stringify(ws),'*');
+	} 
+
+	return function process_wb(wb) {
+		global_wb = wb;
+		console.log(wb);
+		output = to_json(wb);
+		output = output["sheet1"];
+		out1=[];
+		tag=0;
+		output.forEach(function(currentValue){
+		    if(tag==0 && currentValue[1]=="序号"){
+		        tag=1;
+		    }else if(tag==1){
+		        out1.push(currentValue);
+		    }
+		});
+		output=[];
+		$("#data").val().split("*").forEach(function(value){
+		    //console.log(value);
+		    out1.forEach(function(value1){
+		        //console.log(value1,value,value1[2].indexOf(value))
+    		    if(value1[2].indexOf(value)!=-1){
+    		        if(value1[2]=="箱体"){
+    		            value1[2]="箱体、安装架、管道及附件";
+    		        }
+    		        innerArr=[];
+    		        value1.forEach(function(val,index){
+    		            innerArr[index-1]=val;
+    		        });
+    		        output.push(innerArr);
+    		    }
+    		});
+		});
+		merge=[];
+        output.forEach(function(value,index,e){
+            e[index][0]=index+1;
+            e[index][2]='';
+            e[index][4]='';
+            merge.push({s: {c: 1,r: index},e: {c: 2,r: index}},{s: {c: 3,r: index},e: {c: 4,r: index}});
+        });
+		console.log(output);
+        outputXLSX(output,merge);
+        OUT.innerText = JSON.stringify(out1, 2, 2);
+        
+		
+	};
+})();
+
+var setfmt = window.setfmt = function setfmt() { if(global_wb) process_wb(global_wb); };
+
+var do_file = (function() {
+	return function do_file(files) {
+		var f = files[0];
+		var reader = new FileReader();
+		reader.onload = function(e) {
+			console.log("onload", new Date());
+			var data = e.target.result;
+			data = new Uint8Array(data);
+			process_wb(X.read(data, {type: 'array'}));
+		};
+		reader.readAsArrayBuffer(f);
+	};
+})();
+
+(function() {
+	var drop = document.getElementById('drop');
+	if(!drop.addEventListener) return;
+	function handleDrop(e) {
+		e.stopPropagation();
+		e.preventDefault();
+		do_file(e.dataTransfer.files);
+	}
+	function handleDragover(e) {
+		e.stopPropagation();
+		e.preventDefault();
+		e.dataTransfer.dropEffect = 'copy';
+	}
+	drop.addEventListener('dragenter', handleDragover, false);
+	drop.addEventListener('dragover', handleDragover, false);
+	drop.addEventListener('drop', handleDrop, false);
+})();
+
+</script>
+</body>
+</html>

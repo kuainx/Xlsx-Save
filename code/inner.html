@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title></title>
+        <script src="./xlsx.full.min.js"></script>
+        <script src="./FileSaver.min.js"></script>
+        <script type="text/javascript" charset="utf-8">
+        const s2ab = s => {
+                let buf = new ArrayBuffer(s.length);
+                let view = new Uint8Array(buf);
+                for (let i = 0; i !== s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+                return buf;
+                };
+            window.addEventListener('message',function(e){
+                var jsonObj =  JSON.parse(e.data)
+                console.log(jsonObj);
+                var workbook = {
+                    SheetNames: ['Sheet1'],
+                    Sheets: {
+                      Sheet1: jsonObj
+                    }
+                  };
+                var workbookOut = XLSX.write(workbook, {
+                    bookType: 'xlsx',
+                    bookSST: false,
+                    type: 'binary'
+                  });
+                saveAs(new Blob([s2ab(workbookOut)],{type:""}), "out.xlsx")
+            });
+        </script>
+    </head>
+    
+    <body>
+        
+    </body>
+</html>
