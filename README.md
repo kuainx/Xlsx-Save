@@ -15,7 +15,7 @@ Save Xlsx with sheetjs (include style)
 * inner使用iframe嵌入至outer
 * 使用js手动添加样式
  
-# 组成
+# 方案
 * 在outer使用new ver 进行读取（使用h5的拖拽文件），转换成为JSON
 * 在outer进行数据（JSON格式）的处理
 * 在outer生成单元格合并数据

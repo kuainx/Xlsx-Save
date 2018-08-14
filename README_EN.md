@@ -18,7 +18,7 @@ Save Xlsx with sheetjs (include style)
 * Use Iframe to embed inner into outer
 * Use javascript to add style manually
  
-# Include
+# Method
 * 在outer使用new ver 进行读取（使用h5的拖拽文件），转换成为JSON
 * 在outer进行数据（JSON格式）的处理
 * 在outer生成单元格合并数据
