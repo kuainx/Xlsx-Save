@@ -20,28 +20,24 @@
 </style>
 </head>
 <body>
-    先后顺序，以*分隔
-    <textarea type="text" id="data"></textarea>
-    <button id="data_save" onclick="localStorage.setItem('data',$('#data').val());alert('Save Complete');">保存</button>
 <pre>
 <div id="drop">Drop a spreadsheet file here to see sheet data</div>
 </pre>
+<!--JSON显示，可删-->
 <pre id="out"></pre>
+<!--inner-->
 <iframe src="./inner.html" id="f" frameborder="0"></iframe>
+<!--newver-->
 <script src="./xlsx.new.min.js"></script>
+<!--只在数据处理过程中使用到了JQ，可删，需一起删-->
 <script src="./jquery.min.js"></script>
 <script>
-const s2ab = s => {
-let buf = new ArrayBuffer(s.length);
-let view = new Uint8Array(buf);
-for (let i = 0; i !== s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
-return buf;
-};
-$("#data").val(localStorage.getItem('data'));
 var X = XLSX;
 var global_wb;
 var process_wb = (function() {
+//  json显示，可删，需一起删
 	var OUT = document.getElementById('out');
+// 	工作表转JSON
 	var to_json = function to_json(workbook) {
 		var result = {};
 		workbook.SheetNames.forEach(function(sheetName) {
@@ -50,6 +46,7 @@ var process_wb = (function() {
 		});
 		return result;
 	};
+// 	定义样式，可删
 	const borderAll = {  //单元格外侧框线
       top: {
         style: 'thin'
@@ -67,7 +64,7 @@ var process_wb = (function() {
 	var outputXLSX = function outputXLSX(data,merge){
 	    var wb = XLSX.utils.book_new();
         var ws = XLSX.utils.aoa_to_sheet(data);
-        
+        // 附加样式，可删
         Object.keys(ws).forEach(function(index){
             val=ws[index];
             if(val.t==undefined){
@@ -78,17 +75,21 @@ var process_wb = (function() {
                 ws[index].s={font: {name:'楷体', sz: 9},alignment: {vertical:"center",horizontal:"center"}, border:borderAll };
             }
         });
-        
+        // 表格合并数据，可删
         ws['!merges'] = merge;
         console.log(ws);
+        // postMessage传递数据，可改用函数
         document.getElementById('f').contentWindow.postMessage(JSON.stringify(ws),'*');
 	} 
 
 	return function process_wb(wb) {
 		global_wb = wb;
 		console.log(wb);
+// 		处理数据
 		output = to_json(wb);
+// 		取出sheet1数据，可改
 		output = output["sheet1"];
+// 		开始处理数据
 		out1=[];
 		tag=0;
 		output.forEach(function(currentValue){
@@ -115,6 +116,8 @@ var process_wb = (function() {
     		    }
     		});
 		});
+// 		结束处理数据
+//      生成单元格合并数据
 		merge=[];
         output.forEach(function(value,index,e){
             e[index][0]=index+1;
@@ -123,15 +126,15 @@ var process_wb = (function() {
             merge.push({s: {c: 1,r: index},e: {c: 2,r: index}},{s: {c: 3,r: index},e: {c: 4,r: index}});
         });
 		console.log(output);
+// 		输出表格
         outputXLSX(output,merge);
+//      显示JSON，可删，一起删
         OUT.innerText = JSON.stringify(out1, 2, 2);
         
 		
 	};
 })();
-
-var setfmt = window.setfmt = function setfmt() { if(global_wb) process_wb(global_wb); };
-
+// 处理表格
 var do_file = (function() {
 	return function do_file(files) {
 		var f = files[0];
@@ -145,7 +148,7 @@ var do_file = (function() {
 		reader.readAsArrayBuffer(f);
 	};
 })();
-
+// 绑定拖拽事件
 (function() {
 	var drop = document.getElementById('drop');
 	if(!drop.addEventListener) return;

@@ -31,12 +31,6 @@
 <script src="./xlsx.new.min.js"></script>
 <script src="./jquery.min.js"></script>
 <script>
-const s2ab = s => {
-let buf = new ArrayBuffer(s.length);
-let view = new Uint8Array(buf);
-for (let i = 0; i !== s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
-return buf;
-};
 $("#data").val(localStorage.getItem('data'));
 var X = XLSX;
 var global_wb;
@@ -129,8 +123,6 @@ var process_wb = (function() {
 		
 	};
 })();
-
-var setfmt = window.setfmt = function setfmt() { if(global_wb) process_wb(global_wb); };
 
 var do_file = (function() {
 	return function do_file(files) {

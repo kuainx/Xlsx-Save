@@ -15,8 +15,9 @@ Save Xlsx with sheetjs (include style)
 # 组成
 * 在outer使用new ver 进行读取（使用h5的拖拽文件），转换成为JSON
 * 在outer进行数据（JSON格式）的处理
+* 在outer生成单元格合并数据
 * 在outer将处理后的数据（JSON）使用new ver生成表格格式，但不进行保存
-* 在outer根据表格的单元格号逐一附加样式属性（也可写默认值），并附加至处理后的JSON
+* 在outer根据表格的单元格号逐一附加样式属性（也可写默认值），并附加至处理后的JSON，同时附加表格合并数据
 * 从outer使用H5的postMessage传递文本化JSON数据至inner
 * 在inner创建表（JSON），并使用JSON将原表信息覆盖
 * 在inner使用FileSaver（也可是原生js方法）将文件下载
