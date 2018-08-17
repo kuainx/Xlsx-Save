@@ -95,7 +95,8 @@ var process_wb = (function() {
 		output=[];
 		$("#data").val().split("*").forEach(function(value){
 		    //console.log(value);
-		    out1.forEach(function(value1){
+		    del=[];
+		    out1.forEach(function(value1,index){
 		        //console.log(value1,value,value1[2].indexOf(value))
     		    if(value1[2].indexOf(value)!=-1){
     		        if(value1[2]=="箱体"){
@@ -106,7 +107,11 @@ var process_wb = (function() {
     		            innerArr[index-1]=val;
     		        });
     		        output.push(innerArr);
+    		        del.unshift(index);
     		    }
+    		});
+    		del.forEach(function(index){
+    		    out1.splice(index,1);
     		});
 		});
 		merge=[];
