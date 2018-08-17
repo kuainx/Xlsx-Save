@@ -30,6 +30,9 @@ Save Xlsx with sheetjs (include style)
 * 为兼容跨域请求，使用postMessage，在非H5浏览器必须被替换
 
 # 更新日志
+### `2018/08/17`
+* 更新code_demo/inner.html，修复重复项的bug
+
 ### `2018/08/14`
 * 更新readme.md
 * 更新readme_EN.md

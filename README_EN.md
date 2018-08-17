@@ -35,6 +35,9 @@ Save Xlsx with sheetjs (include style)
 * If you use the broser didn't allow HTML5 , it must be replaced
 
 # Update log
+### `2018/08/17`
+* Update code_demo/inner.html , fix the bug 'project repeat'
+* 
 ### `2018/08/14`
 * Update readme.md
 * Update readme_EN.md
