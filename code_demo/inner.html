@@ -14,7 +14,7 @@
                 };
             window.addEventListener('message',function(e){
                 var jsonObj =  JSON.parse(e.data)
-                console.log(jsonObj);
+                console.log("GETJSON",jsonObj);
                 var workbook = {
                     SheetNames: ['Sheet1'],
                     Sheets: {

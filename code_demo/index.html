@@ -98,20 +98,15 @@ var process_wb = (function() {
 		    }
 		});
 		output=[];
-		
 		$("#data").val().split("*").forEach(function(value){
-		    //console.log(value);
 		    del=[];
 		    out1.forEach(function(value1,index){
 		        //console.log(value1,value,value1[2].indexOf(value))
     		    if(value1[2].indexOf(value)!=-1){
     		        if(value1[2]=="箱体"){
     		            value1[2]="箱体、安装架、管道及附件";
-    		        }
-    		        if(value1[2]=="箱体、安装架、管道及附件"){
     		            value1[4]="上海飞奥";
-    		        }
-    		        if(value=="调压器" && cut>0){
+    		        }else if(value=="调压器" && cut>0){
     		            cut=cut-1;
     		            value1[2]="调压器附紧急切断阀";
     		        }
@@ -127,6 +122,99 @@ var process_wb = (function() {
     		    out1.splice(index,1);
     		});
 		});
+		if(out1.length!=0){
+		    alert("无法解决的错误！，请查看控制台");
+		    console.log("ERROR","存留的数据",out1);
+		}
+		out1=[];
+		var glq=[];
+		var qf=[];
+		var qfUse=[];
+        output.forEach(function(value,index){
+            if(value[1]=="螺纹球阀"){
+                qf.push(value);
+            }else{
+                out1.push(value);
+                if(value[1].indexOf("过滤器")!=-1){
+                    glq.push(value);
+                }
+            }
+        });
+		glq.forEach(function(value){
+		    ver=value[5].match(/\d+(\.\d+)?/)[0];
+		    num=value[7];
+		    getQf=false;
+		    del=-1;
+		    if(ver<2.5){
+		        qf.forEach(function(value1,index){
+		            if(getQf==false && value1[6].indexOf("R1/2-Rc1/2")!=-1 && value1[7]==num){
+		                qfUse.push(value1);
+		                getQf=true;
+		                del=index;
+		            }
+		        });
+		        if(getQf==false){
+		            qf.forEach(function(value1,index1){
+    		            if(getQf==false && value1[6].indexOf("R1/2-Rc1/2")!=-1 && value1[7]>num){
+    		                pushVal=value1.slice(0);
+    		                pushVal[7]=num;
+    		                qfUse.push(pushVal);
+    		                qf[index1][7]=value1[7]-num;
+    		                getQf=true;
+    		            }
+    		        });
+		        }
+		        if(getQf==false){
+		            alert("无法解决的错误！，请查看控制台");
+		            console.log("ERROR","无法匹配的数据",num,qf,qfUse);
+		        }
+		        if(del!=-1){
+		            qf.splice(del,1);
+		        }
+		    }else if(ver>=2.5){
+		        qf.forEach(function(value1,index){
+		            if(getQf==false && value1[6].indexOf("R1-Rc1")!=-1 && value1[7]==num){
+		                qfUse.push(value1);
+		                getQf=true;
+		                del=index;
+		            }
+		        });
+		        if(getQf==false){
+		            qf.forEach(function(value1,index1){
+    		            if(getQf==false && value1[6].indexOf("R1-Rc1")!=-1 && value1[7]>num){
+    		                pushVal=value1.slice(0);
+    		                pushVal[7]=num;
+    		                qfUse.push(pushVal);
+    		                qf[index1][7]=value1[7]-num;
+    		                getQf=true;
+    		            }
+    		        });
+		        }
+		        if(getQf==false){
+		            alert("无法解决的错误！，请查看控制台");
+		            console.log("ERROR","无法匹配的数据",num,qf,qfUse);
+		        }
+		        if(del!=-1){
+		            qf.splice(del,1);
+		        }
+		    }
+		});
+		var xt=0;
+		var glqI=0;
+		out1.forEach(function(value,index){
+		    if(value[1].indexOf("过滤器")!=-1){
+		        glqI=index;
+		    }else if(value[1]=="箱体、安装架、管道及附件" || value[1]=="安装架"){
+		        xt=index;
+		    }
+		});
+		qfUse.forEach(function(value){
+		    out1.splice(xt+1,0,value);
+		});
+		qf.forEach(function(value){
+		    out1.splice(glqI,0,value)
+		});
+        output=out1;
 		merge=[];
         output.forEach(function(value,index,e){
             e[index][0]=index+1;
