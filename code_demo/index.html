@@ -126,6 +126,10 @@ var process_wb = (function() {
 		    alert("无法解决的错误！，请查看控制台");
 		    console.log("ERROR","存留的数据",out1);
 		}
+		if(cut!=0){
+		    alert("无法解决的错误！，请查看控制台");
+		    console.log("ERROR","存留的数据","cut"+cut);
+		}
 		out1=[];
 		var glq=[];
 		var qf=[];
@@ -147,6 +151,7 @@ var process_wb = (function() {
 		    del=-1;
 		    if(ver<2.5){
 		        qf.forEach(function(value1,index){
+		            console.log(1,value1);
 		            if(getQf==false && value1[6].indexOf("R1/2-Rc1/2")!=-1 && value1[7]==num){
 		                qfUse.push(value1);
 		                getQf=true;
@@ -155,11 +160,12 @@ var process_wb = (function() {
 		        });
 		        if(getQf==false){
 		            qf.forEach(function(value1,index1){
-    		            if(getQf==false && value1[6].indexOf("R1/2-Rc1/2")!=-1 && value1[7]>num){
+		                console.log(2,value1);
+    		            if(getQf==false && value1[6].indexOf("R1/2-Rc1/2")!=-1 && Number(value1[7])>Number(num)){
     		                pushVal=value1.slice(0);
     		                pushVal[7]=num;
     		                qfUse.push(pushVal);
-    		                qf[index1][7]=value1[7]-num;
+    		                qf[index1][7]=Number(value1[7])-Number(num);
     		                getQf=true;
     		            }
     		        });
@@ -181,11 +187,11 @@ var process_wb = (function() {
 		        });
 		        if(getQf==false){
 		            qf.forEach(function(value1,index1){
-    		            if(getQf==false && value1[6].indexOf("R1-Rc1")!=-1 && value1[7]>num){
+    		            if(getQf==false && value1[6].indexOf("R1-Rc1")!=-1 && Number(value1[7])>Number(num)){
     		                pushVal=value1.slice(0);
     		                pushVal[7]=num;
     		                qfUse.push(pushVal);
-    		                qf[index1][7]=value1[7]-num;
+    		                qf[index1][7]=Number(value1[7])-Number(num);
     		                getQf=true;
     		            }
     		        });
