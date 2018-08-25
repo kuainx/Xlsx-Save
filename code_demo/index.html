@@ -99,6 +99,10 @@ var process_wb = (function() {
 		});
 		output=[];
 		$("#data").val().split("*").forEach(function(value){
+		    if(value==""){
+		        alert("无法解决的错误！，请查看控制台");
+		        console.error("ERROR","有空匹配项");
+		    }
 		    del=[];
 		    out1.forEach(function(value1,index){
 		        //console.log(value1,value,value1[2].indexOf(value))
@@ -114,6 +118,11 @@ var process_wb = (function() {
     		        value1.forEach(function(val,index){
     		            innerArr[index-1]=val;
     		        });
+    		        innerArr[2]==undefined && (innerArr[2]="");
+    		        innerArr[3]==undefined && (innerArr[3]="");
+    		        innerArr[4]==undefined && (innerArr[4]="");
+    		        innerArr[5]==undefined && (innerArr[5]="");
+    		        //console.log("compare",value,value1.splice(0));
     		        output.push(innerArr);
     		        del.unshift(index);
     		    }
@@ -124,11 +133,11 @@ var process_wb = (function() {
 		});
 		if(out1.length!=0){
 		    alert("无法解决的错误！，请查看控制台");
-		    console.log("ERROR","存留的数据",out1);
+		    console.error("ERROR","存留的数据",out1);
 		}
 		if(cut!=0){
 		    alert("无法解决的错误！，请查看控制台");
-		    console.log("ERROR","存留的数据","cut"+cut);
+		    console.error("ERROR","存留的数据","cut"+cut);
 		}
 		out1=[];
 		var glq=[];
@@ -172,7 +181,7 @@ var process_wb = (function() {
 		        }
 		        if(getQf==false){
 		            alert("无法解决的错误！，请查看控制台");
-		            console.log("ERROR","无法匹配的数据",num,qf,qfUse);
+		            console.error("ERROR","无法匹配的数据",num,qf,qfUse);
 		        }
 		        if(del!=-1){
 		            qf.splice(del,1);
@@ -198,7 +207,7 @@ var process_wb = (function() {
 		        }
 		        if(getQf==false){
 		            alert("无法解决的错误！，请查看控制台");
-		            console.log("ERROR","无法匹配的数据",num,qf,qfUse);
+		            console.error("ERROR","无法匹配的数据",num,qf,qfUse);
 		        }
 		        if(del!=-1){
 		            qf.splice(del,1);
@@ -224,8 +233,6 @@ var process_wb = (function() {
 		merge=[];
         output.forEach(function(value,index,e){
             e[index][0]=index+1;
-            e[index][2]='';
-            e[index][4]='';
             merge.push({s: {c: 1,r: index},e: {c: 2,r: index}},{s: {c: 3,r: index},e: {c: 4,r: index}});
         });
 		console.log(output);
