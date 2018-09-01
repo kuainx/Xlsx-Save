@@ -6,8 +6,6 @@
 <style>
 #drop{
 	border:2px dashed #bbb;
-	-moz-border-radius:5px;
-	-webkit-border-radius:5px;
 	border-radius:5px;
 	padding:25px;
 	text-align:center;
@@ -86,12 +84,15 @@ var process_wb = (function() {
 		out1=[];
 		tag=0;
 		cut=0;
+		hotCable=0;
 		output.forEach(function(currentValue){
 		    if(tag==0 && currentValue[1]=="序号"){
 		        tag=1;
 		    }else if(tag==1){
 		        if(currentValue[2]=="紧急切断阀"){
 		            cut=cut+1;
+		        }else if(currentValue[2]=="电伴热线"){
+		            hotCable=hotCable+1;
 		        }else if(currentValue!=""){
 		            out1.push(currentValue);
 		        }
@@ -110,7 +111,15 @@ var process_wb = (function() {
     		        if(value1[2]=="箱体"){
     		            value1[2]="箱体、安装架、管道及附件";
     		            value1[4]="上海飞奥";
+    		            value1[6]="";
+    		            value1[7]="";
     		        }else if(value=="调压器" && cut>0){
+    		            cut=cut-1;
+    		            value1[2]="调压器附紧急切断阀";
+    		        }else if(value=="接线盒" && hotCable>0){
+    		            hotCable=hotCable-1;
+    		            value1[2]="电伴热保温装置";
+    		        }else if(value=="接线盒"){
     		            cut=cut-1;
     		            value1[2]="调压器附紧急切断阀";
     		        }
@@ -139,6 +148,10 @@ var process_wb = (function() {
 		    alert("无法解决的错误！，请查看控制台");
 		    console.error("ERROR","存留的数据","cut"+cut);
 		}
+		if(hotCable!=0){
+		    alert("无法解决的错误！，请查看控制台");
+		    console.error("ERROR","存留的数据","hotCable"+hotCable);
+		}
 		out1=[];
 		var glq=[];
 		var qf=[];
@@ -158,7 +171,7 @@ var process_wb = (function() {
 		    num=value[7];
 		    getQf=false;
 		    del=-1;
-		    if(ver<2.5){
+		    if(ver<=2.5){
 		        qf.forEach(function(value1,index){
 		            console.log(1,value1);
 		            if(getQf==false && value1[6].indexOf("R1/2-Rc1/2")!=-1 && value1[7]==num){
@@ -186,7 +199,7 @@ var process_wb = (function() {
 		        if(del!=-1){
 		            qf.splice(del,1);
 		        }
-		    }else if(ver>=2.5){
+		    }else if(ver>2.5){
 		        qf.forEach(function(value1,index){
 		            if(getQf==false && value1[6].indexOf("R1-Rc1")!=-1 && value1[7]==num){
 		                qfUse.push(value1);
@@ -214,15 +227,18 @@ var process_wb = (function() {
 		        }
 		    }
 		});
-		var xt=0;
-		var glqI=0;
+		var xt=-1;
+		var glqI=-1;
+		var xt1=-1;
 		out1.forEach(function(value,index){
 		    if(value[1].indexOf("过滤器")!=-1){
-		        glqI=index;
+		      glqI==-1 && (glqI=index);
 		    }else if(value[1]=="箱体、安装架、管道及附件" || value[1]=="安装架"){
 		        xt=index;
+		        xt1==-1 && (xt1=index);
 		    }
 		});
+		glqI==-1 && (glqI=xt1);
 		qfUse.forEach(function(value){
 		    out1.splice(xt+1,0,value);
 		});
