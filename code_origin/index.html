@@ -87,8 +87,10 @@ var process_wb = (function() {
 		console.log(wb);
 // 		处理数据
 		output = to_json(wb);
+		console.log(output);
 // 		取出sheet1数据，可改
-		output = output["sheet1"];
+		output = output["Sheet1"];
+		OUT.innerText = JSON.stringify(output, 2, 2);
 // 		开始处理数据
 
 // 		保证最后需要输出的结果存入output即可

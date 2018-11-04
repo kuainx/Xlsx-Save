@@ -106,6 +106,9 @@ var process_wb = (function() {
 		    }
 		    del=[];
 		    out1.forEach(function(value1,index){
+		        if(value!="甲供" && value1[2].indexOf("甲供")!=-1){
+		            return;
+		        }
 		        //console.log(value1,value,value1[2].indexOf(value))
     		    if(value1[2].indexOf(value)!=-1){
     		        if(value1[2]=="箱体"){
@@ -113,7 +116,7 @@ var process_wb = (function() {
     		            value1[4]="上海飞奥";
     		            value1[6]="";
     		            value1[7]="";
-    		        }else if(value=="调压器" && cut>0){
+    		        }else if(value1[2]=="调压器" && cut>0){
     		            cut=cut-1;
     		            value1[2]="调压器附紧急切断阀";
     		        }else if(value=="接线盒" && hotCable>0){
@@ -161,7 +164,7 @@ var process_wb = (function() {
                 qf.push(value);
             }else{
                 out1.push(value);
-                if(value[1].indexOf("过滤器")!=-1){
+                if(value[1].indexOf("过滤器")!=-1 && value[1].indexOf("甲供")==-1){
                     glq.push(value);
                 }
             }
@@ -194,7 +197,7 @@ var process_wb = (function() {
 		        }
 		        if(getQf==false){
 		            alert("无法解决的错误！，请查看控制台");
-		            console.error("ERROR","无法匹配的数据",num,qf,qfUse);
+		            console.error("ERROR","无法匹配的数据",value,num,qf,qfUse);
 		        }
 		        if(del!=-1){
 		            qf.splice(del,1);
@@ -220,7 +223,7 @@ var process_wb = (function() {
 		        }
 		        if(getQf==false){
 		            alert("无法解决的错误！，请查看控制台");
-		            console.error("ERROR","无法匹配的数据",num,qf,qfUse);
+		            console.error("ERROR","无法匹配的数据",value,num,qf,qfUse);
 		        }
 		        if(del!=-1){
 		            qf.splice(del,1);
@@ -239,6 +242,11 @@ var process_wb = (function() {
 		    }
 		});
 		glqI==-1 && (glqI=xt1);
+		xt==-1 && (xt=glqI-1);
+		if(glqI==-1 || xt==-1){
+            alert("无法解决的错误！，请查看控制台");
+            console.error("ERROR","无法找到过滤器、箱体、安装架",glqI,xt);
+        }
 		qfUse.forEach(function(value){
 		    out1.splice(xt+1,0,value);
 		});
